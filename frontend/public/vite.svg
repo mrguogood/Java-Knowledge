@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#8B5CF6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 背景圆角方块 -->
+  <rect x="0" y="0" width="256" height="256" rx="56" fill="url(#g)"/>
+
+  <!-- G 字母 -->
+  <path d="M160 66 Q160 40 126 40 Q82 40 82 86 L82 170 Q82 212 126 212 Q160 212 160 184 L160 132 L112 132"
+        fill="none" stroke="#fff" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- 底部横线点睛 -->
+  <line x1="64" y1="204" x2="192" y2="204" stroke="#FBBF24" stroke-width="8" stroke-linecap="round"/>
+</svg>

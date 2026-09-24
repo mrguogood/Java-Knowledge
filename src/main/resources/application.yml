@@ -1,0 +1,11 @@
+# 服务器配置
+server:
+  port: 8080 # 端口号
+
+# 通义千问配置
+ai:
+  qwen:
+    api-key: ${AI_QWEN_API_KEY:sk-your-api-key-here}  # 从环境变量读取，本地可放 application-local.yml
+    model: qwen3.8-27b           # 推荐：平衡性能与价格，适合开发测试
+    temperature: 0.7             # 创意度：0最严谨，1最发散，聊天用0.7刚好
+    max-tokens: 1024             # 单次回复最大长度，避免token刷太快

@@ -1,0 +1,107 @@
+/* ===== Design Tokens ===== */
+:root {
+  /* --- Color: Primary & Functional --- */
+  --color-primary: #409EFF;
+  --color-primary-light: #66b1ff;
+  --color-primary-bg: rgba(64, 158, 255, 0.06);
+  --color-success: #67C23A;
+  --color-warning: #E6A23C;
+  --color-danger: #F56C6C;
+
+  /* --- Color: Text --- */
+  --color-text-primary: #303133;
+  --color-text-regular: #606266;
+  --color-text-secondary: #909399;
+  --color-text-placeholder: #c0c4cc;
+
+  /* --- Color: Border & Background --- */
+  --color-border: #ebeef5;
+  --color-bg-page: #f0f2f5;
+  --color-bg-card: #fff;
+  --color-bg-light: #f5f7fa;
+
+  /* --- Color: Sidebar --- */
+  --color-sidebar-bg: #001529;
+  --color-sidebar-submenu-bg: #000c17;
+  --color-sidebar-text: rgba(255, 255, 255, 0.65);
+  --color-sidebar-active-bg: var(--color-primary);
+  --color-sidebar-hover-bg: rgba(255, 255, 255, 0.08);
+  --color-sidebar-border: rgba(255, 255, 255, 0.08);
+
+  /* --- Font Size --- */
+  --font-size-page-title: 20px;
+  --font-size-section-title: 16px;
+  --font-size-body: 14px;
+  --font-size-caption: 12px;
+  --font-size-mini: 11px;
+  --font-size-stat-value: 24px;
+  --font-size-welcome: 22px;
+
+  /* --- Spacing (4px base) --- */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-base: 16px;
+  --spacing-lg: 20px;
+  --spacing-xl: 24px;
+  --spacing-xxl: 32px;
+
+  /* --- Border Radius --- */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+
+  /* --- Shadow --- */
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 2px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.1);
+
+  /* --- Layout --- */
+  --sidebar-width: 220px;
+  --sidebar-collapsed-width: 64px;
+  --topbar-height: 56px;
+  --content-max-width: 960px;
+}
+
+/* ===== Reset ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #app {
+  height: 100%;
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== Global Layout Helpers ===== */
+.page-container {
+}
+
+.page-card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ===== Focus Ring (Accessibility) ===== */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ===== Utility Classes ===== */
+.text-primary { color: var(--color-text-primary); }
+.text-regular { color: var(--color-text-regular); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-caption { color: var(--color-text-placeholder); }
+
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-md { margin-bottom: var(--spacing-md); }
+.mb-base { margin-bottom: var(--spacing-base); }
+.mb-lg { margin-bottom: var(--spacing-lg); }
+.mb-xl { margin-bottom: var(--spacing-xl); }
