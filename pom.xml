@@ -56,6 +56,13 @@
             <artifactId>caffeine</artifactId>
             <version>2.9.3</version>
         </dependency>
+
+        <!-- Redis 分布式会话记忆 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <version>2.7.18</version>
+        </dependency>
     </dependencies>
 
     <build>
