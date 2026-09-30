@@ -54,7 +54,7 @@ const stats = reactive([
 ])
 
 const quickActions = [
-  { label: '知识列表',  path: '/knowledge/list', icon: 'Reading' },
+  { label: '知识库管理',  path: '/knowledge/list', icon: 'Reading' },
   { label: '新建知识',  path: '/knowledge/list', icon: 'Plus' }
 ]
 </script>

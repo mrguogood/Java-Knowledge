@@ -21,9 +21,9 @@ const routes = [
         name: 'Knowledge',
         redirect: '/knowledge/list',
         meta: {
-          title: '知识管理',
+          title: '知识库管理',
           icon: 'Reading',
-          breadcrumb: [{ name: '知识管理' }]
+          breadcrumb: [{ name: '知识库管理' }]
         },
         children: [
           {
@@ -31,11 +31,11 @@ const routes = [
             name: 'KnowledgeList',
             component: () => import('@/views/knowledge/List.vue'),
             meta: {
-              title: '知识列表',
+              title: '知识库管理',
               icon: 'List',
               breadcrumb: [
-                { name: '知识管理', path: '/knowledge' },
-                { name: '知识列表' }
+                { name: '知识库管理', path: '/knowledge' },
+                { name: '知识库管理' }
               ]
             }
           }

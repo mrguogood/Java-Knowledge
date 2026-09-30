@@ -2,7 +2,7 @@
   <div class="page-container">
     <div class="page-card">
       <div class="page-header">
-        <h2 class="page-title">知识列表</h2>
+        <h2 class="page-title">知识库管理</h2>
         <el-button type="primary" :icon="Plus" @click="handleAdd">新建知识</el-button>
       </div>
 

@@ -44,7 +44,7 @@ export const useKnowledgeStore = defineStore('knowledge', () => {
   ]
 
   /**
-   * 获取知识列表
+   * 获取知识库管理
    * @param {object} params - 查询参数 { page, pageSize, keyword, category }
    * TODO: 对接真实 API 后去掉 mockData 的赋值
    */

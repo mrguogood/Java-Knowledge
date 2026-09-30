@@ -34,12 +34,12 @@ export const useAppStore = defineStore('app', () => {
     },
     {
       path: '/knowledge',
-      name: '知识管理',
+      name: '知识库管理',
       icon: 'Reading',
       children: [
         {
           path: '/knowledge/list',
-          name: '知识列表',
+          name: '知识库管理',
           icon: 'List'
         }
       ]
