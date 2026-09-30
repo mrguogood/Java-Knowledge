@@ -1,4 +1,4 @@
-package com.guo.service.chatService.memory;
+package com.guo.untils;
 
 import com.alibaba.dashscope.common.MultiModalMessage;
 import lombok.extern.slf4j.Slf4j;

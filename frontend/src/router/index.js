@@ -102,6 +102,32 @@ const routes = [
                 { name: '流式对话' }
               ]
             }
+          },
+          {
+            path: 'local-memory',
+            name: 'AiLocalMemory',
+            component: () => import('@/views/ai/LocalMemoryChat.vue'),
+            meta: {
+              title: '本地内存记忆',
+              icon: 'Memo',
+              breadcrumb: [
+                { name: 'AI 助手', path: '/ai' },
+                { name: '本地内存记忆' }
+              ]
+            }
+          },
+          {
+            path: 'redis-memory',
+            name: 'AiRedisMemory',
+            component: () => import('@/views/ai/RedisMemoryChat.vue'),
+            meta: {
+              title: 'Redis 分布式记忆',
+              icon: 'DataAnalysis',
+              breadcrumb: [
+                { name: 'AI 助手', path: '/ai' },
+                { name: 'Redis 分布式记忆' }
+              ]
+            }
           }
         ]
       }

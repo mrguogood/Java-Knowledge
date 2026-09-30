@@ -7,7 +7,9 @@ const pathToComponentName = {
   '/ai/send': 'SendChat',
   '/ai/cache': 'CacheChat',
   '/ai/concurrency': 'ConcurrencyChat',
-  '/ai/stream': 'StreamChat'
+  '/ai/stream': 'StreamChat',
+  '/ai/local-memory': 'LocalMemoryChat',
+  '/ai/redis-memory': 'RedisMemoryChat'
 }
 
 export const useAppStore = defineStore('app', () => {
@@ -66,6 +68,16 @@ export const useAppStore = defineStore('app', () => {
           path: '/ai/stream',
           name: '流式对话',
           icon: 'Promotion'
+        },
+        {
+          path: '/ai/local-memory',
+          name: '本地内存记忆',
+          icon: 'Memo'
+        },
+        {
+          path: '/ai/redis-memory',
+          name: 'Redis 分布式记忆',
+          icon: 'DataAnalysis'
         }
       ]
     }
