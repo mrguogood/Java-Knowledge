@@ -1,15 +1,26 @@
+# 服务器配置
+server:
+  port: 8080 # 端口号
+
 spring:
   profiles:
     active: local
-# Redis 配置（本地开发用默认 localhost:6379）
+  # Redis 配置（本地开发用默认 localhost:6379）
   redis:
     host: localhost
     port: 6379
     timeout: 3000ms
-
-# 服务器配置
-server:
-  port: 8080 # 端口号
+  # MySQL 数据源（知识库文件管理）
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/java_knowledge?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: ${MYSQL_PASSWORD:root}
+  # 上传文件大小限制（pdf/word/excel 可能较大）
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 # 通义千问配置
 ai:
@@ -18,3 +29,19 @@ ai:
     model: qwen3.8-27b           # 推荐：平衡性能与价格，适合开发测试
     temperature: 0.7             # 创意度：0最严谨，1最发散，聊天用0.7刚好
     max-tokens: 1024             # 单次回复最大长度，避免token刷太快
+
+# 知识库配置
+knowledge:
+  upload-dir: ${user.dir}/uploadFiles   # 上传文件存储目录
+
+# MyBatis 配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true   # 下划线自动转驼峰
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+
+# 日志级别（本地开发打印 SQL）
+#logging:
+#  level:
+#    com.guo.mapper: debug
