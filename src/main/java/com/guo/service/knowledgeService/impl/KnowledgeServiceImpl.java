@@ -4,6 +4,9 @@ import com.guo.common.PageResult;
 import com.guo.entity.KnowledgeFile;
 import com.guo.mapper.KnowledgeFileMapper;
 import com.guo.service.knowledgeService.KnowledgeService;
+import com.guo.service.parse.DocumentParseService;
+import com.guo.service.parse.TextCleaningService;
+import com.guo.service.vector.MilvusVectorStore;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,13 +15,15 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -55,6 +60,15 @@ public class KnowledgeServiceImpl implements KnowledgeService {
     @Autowired
     private KnowledgeFileMapper knowledgeFileMapper;
 
+    @Autowired
+    private DocumentParseService documentParseService;
+
+    @Autowired
+    private TextCleaningService textCleaningService;
+
+    @Autowired
+    private MilvusVectorStore milvusVectorStore;
+
     @Override
     public KnowledgeFile upload(MultipartFile file, String title, String category, String author, String status) {
         // 1. 空文件校验
@@ -71,7 +85,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
         }
 
         // 3. 存储文件本体
-        String storedName = UUID.randomUUID().toString().replace("-", "") + "." + ext.toLowerCase();
+        String baseName = StringUtils.stripFilenameExtension(originalName);
+        String random3 = String.valueOf(100 + new Random().nextInt(900));
+        String storedName = baseName + random3 + System.currentTimeMillis() + "." + ext.toLowerCase();
         String relativePath = "uploadFiles/" + storedName;
         saveToDisk(storedName, file);
 
@@ -90,6 +106,9 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 
         knowledgeFileMapper.insert(entity);
         log.info("知识文件上传成功，id: {}, 类型: {}, 文件名: {}", entity.getId(), fileType, originalName);
+
+        // 5. 解析并写入向量索引（失败不阻断文件入库，仅告警日志）
+        indexVector(entity);
         return entity;
     }
 
@@ -129,7 +148,10 @@ public class KnowledgeServiceImpl implements KnowledgeService {
                 throw new IllegalArgumentException("仅支持 pdf / word / excel 格式文件");
             }
 
-            String storedName = UUID.randomUUID().toString().replace("-", "") + "." + ext.toLowerCase();
+            // 3. 存储文件本体
+            String baseName = StringUtils.stripFilenameExtension(originalName);
+            String random3 = String.valueOf(100 + new Random().nextInt(900));
+            String storedName = baseName + random3 + System.currentTimeMillis() + "." + ext.toLowerCase();
             saveToDisk(storedName, file);
 
             entity.setFileType(fileType);
@@ -138,12 +160,15 @@ public class KnowledgeServiceImpl implements KnowledgeService {
             entity.setFilePath("uploadFiles/" + storedName);
             entity.setFileSize(file.getSize());
 
-            // 新文件已写入磁盘，删除旧物理文件
+            // 新文件已写入磁盘，删除旧物理文件，并清理旧向量后重建索引
             deleteDiskFile(exists.getStoredName());
+            milvusVectorStore.deleteByKnowledgeId(exists.getId());
         }
 
         knowledgeFileMapper.update(entity);
-        return knowledgeFileMapper.selectById(entity.getId());
+        KnowledgeFile updated = knowledgeFileMapper.selectById(entity.getId());
+        indexVector(updated);
+        return updated;
     }
 
     @Override
@@ -154,6 +179,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
         }
         knowledgeFileMapper.deleteById(id);
         deleteDiskFile(exists.getStoredName());
+        milvusVectorStore.deleteByKnowledgeId(id);
         log.info("知识文件已删除，id: {}, 文件名: {}", id, exists.getFileName());
     }
 
@@ -164,6 +190,31 @@ public class KnowledgeServiceImpl implements KnowledgeService {
     }
 
     // ==================== 私有工具 ====================
+
+    /**
+     * 解析已落盘文档并写入 Milvus 向量索引
+     * <p>
+     * 全流程：Tika 解析 → 双层清洗 → 切片 → 嵌入 → 入库。
+     * 向量化失败不影响文件元数据入库，仅记录告警日志，便于后续补偿重试。
+     */
+    private void indexVector(KnowledgeFile entity) {
+        File source = resolveFile(entity.getStoredName());
+        if (source == null || !source.exists()) {
+            log.warn("向量化异常：文件不存在，id: {}, storedName: {}", entity.getId(), entity.getStoredName());
+            return;
+        }
+        try (InputStream in = Files.newInputStream(source.toPath())) {
+            String rawText = documentParseService.parse(in, entity.getFileName());
+            String cleanText = textCleaningService.clean(rawText);
+            if (StringUtils.hasText(cleanText)) {
+                milvusVectorStore.indexFile(entity, cleanText);
+            } else {
+                log.warn("文档解析后无有效文本，跳过向量化，id: {}", entity.getId());
+            }
+        } catch (Exception e) {
+            log.error("文档向量化失败，id: {}, 文件名: {}", entity.getId(), entity.getFileName(), e);
+        }
+    }
 
     /**
      * 将上传文件写入 uploadFiles 目录

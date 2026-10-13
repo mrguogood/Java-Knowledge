@@ -29,10 +29,21 @@ ai:
     model: qwen3.8-27b           # 推荐：平衡性能与价格，适合开发测试
     temperature: 0.7             # 创意度：0最严谨，1最发散，聊天用0.7刚好
     max-tokens: 1024             # 单次回复最大长度，避免token刷太快
+  # 文本嵌入模型（向量化用）：维度必须与下面 milvus.dimension 严格一致，否则建集合失败
+  embedding:
+    model: text-embedding-v3     # DashScope 通义 text-embedding 系列
+    dimension: 1024              # text-embedding-v3 输出 1024 维，v2 是 1536 维
 
 # 知识库配置
 knowledge:
   upload-dir: ${user.dir}/uploadFiles   # 上传文件存储目录
+
+# Milvus 向量数据库配置
+milvus:
+  host: localhost
+  port: 19530
+  collection-name: knowledge_vectors   # 集合名统一小写下划线
+  dimension: 1024                      # 向量维度，必须与 ai.embedding.dimension 完全一致
 
 # MyBatis 配置
 mybatis:
